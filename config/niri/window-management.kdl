@@ -1,0 +1,7 @@
+
+// BEGIN vylmods-niri-dms window management
+layout {
+    center-focused-column "always"
+    default-column-width { proportion 0.5; }
+}
+// END vylmods-niri-dms window management
