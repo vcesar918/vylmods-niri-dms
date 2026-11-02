@@ -7,7 +7,7 @@ detect() {
     if command -v "$app" >/dev/null 2>&1; then printf '%s: installed (%s)\n' "$app" "$(command -v "$app")"; else printf '%s: missing\n' "$app"; fi
   done
   if command -v niri >/dev/null 2>&1; then niri --version || true; fi
-  if command -v dms >/dev/null 2>&1; then dms --version || true; fi
+  if command -v dms >/dev/null 2>&1; then dms version || true; fi
 }
 confirm() {
   ((dry_run || approved)) && return 0

@@ -17,6 +17,9 @@ cmp "$tmp/applied" "$XDG_CONFIG_HOME/niri/config.kdl"
 backup=$(find "$XDG_STATE_HOME" -mindepth 1 -maxdepth 1 -type d -print -quit)
 "$root/install.sh" --yes --rollback "$backup"
 grep -qx '// original' "$XDG_CONFIG_HOME/niri/config.kdl"
+printf 'layout {\n    center-focused-column "never"\n}\n' > "$XDG_CONFIG_HOME/niri/config.kdl"
+"$root/install.sh" --yes
+grep -q 'center-focused-column "always"' "$XDG_CONFIG_HOME/niri/config.kdl"
 printf 'layout {\n}\n' > "$XDG_CONFIG_HOME/niri/config.kdl"
 if "$root/install.sh" --yes; then echo 'Expected conflict rejection' >&2; exit 1; fi
 printf 'Tests passed\n'

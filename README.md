@@ -4,7 +4,7 @@ A small, configuration-first foundation for managing a Fedora + Niri desktop. Th
 
 ## Usage
 
-Run `./install.sh --detect` to inspect available commands. Review a proposed change with `./install.sh --dry-run --feature niri`, then run `./install.sh --feature niri` to apply it. `--yes` explicitly accepts the confirmation for unattended use. `all` currently means only the Niri feature. An existing Niri configuration and the `niri` executable are required; the proposed complete configuration is checked with `niri validate` before writing. Existing layout or window-rule blocks require manual review and cause the installer to stop. The installer does not alter those blocks.
+Run `./install.sh --detect` to inspect available commands. Review a proposed change with `./install.sh --dry-run --feature niri`, then run `./install.sh --feature niri` to apply it. `--yes` explicitly accepts the confirmation for unattended use. `all` currently means only the Niri feature. An existing Niri configuration and the `niri` executable are required; the proposed complete configuration is checked with `niri validate` before writing. For an existing layout, the installer changes a single unambiguous `center-focused-column` setting to `always`, preserving other settings; ambiguous layouts require manual review. Validation uses a temporary file beside the configuration so relative includes resolve normally.
 
 A backup is created in `${XDG_STATE_HOME:-~/.local/state}` before updating. Restore it using the command printed by the installer, or `./install.sh --rollback BACKUP_DIRECTORY`; rollback asks before replacing the current file. Use `--dry-run --rollback BACKUP_DIRECTORY` to inspect the operation.
 
