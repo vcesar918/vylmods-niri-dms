@@ -33,4 +33,15 @@ SCRIPT
 chmod +x "$tmp/bin/rpm" "$tmp/bin/dnf"
 "$root/install.sh" --dry-run --feature cursor
 "$root/install.sh" --dry-run --feature files
-printf 'Tests passed\n' 
+mkdir -p "$XDG_CONFIG_HOME/ghostty"
+printf 'font-size = 12\nwindow-padding-y = 4,8\n' > "$XDG_CONFIG_HOME/ghostty/config"
+printf '#!/bin/sh\nexit 0\n' > "$tmp/bin/ghostty"
+chmod +x "$tmp/bin/ghostty"
+"$root/install.sh" --dry-run --feature ghostty
+grep -qx 'window-padding-y = 4,8' "$XDG_CONFIG_HOME/ghostty/config"
+"$root/install.sh" --yes --feature ghostty
+grep -qx 'window-padding-y = 2,20' "$XDG_CONFIG_HOME/ghostty/config"
+ghostty_backup=$(find "$XDG_STATE_HOME" -maxdepth 1 -type d -name 'ghostty-manager-backup.*' -print -quit)
+"$root/install.sh" --yes --rollback "$ghostty_backup"
+grep -qx 'window-padding-y = 4,8' "$XDG_CONFIG_HOME/ghostty/config"
+printf 'Tests passed\n'  

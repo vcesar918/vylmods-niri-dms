@@ -19,7 +19,7 @@ rollback() {
   local dir=$1 target saved
   [[ -f $dir/target && -f $dir/original ]] || { log 'Invalid backup directory'; return 1; }
   IFS= read -r target < "$dir/target"
-  [[ $target == "$config_home/niri/config.kdl" && ! -L $target ]] || { log 'Backup target is not the expected Niri configuration'; return 1; }
+  [[ ( $target == "$config_home/niri/config.kdl" || $target == "$config_home/ghostty/config" ) && ! -L $target ]] || { log 'Backup target is not an expected managed configuration'; return 1; }
   log "Restore $target from $dir"
   confirm 'Restore this backup, replacing the current file?' || return 1
   ((dry_run)) && return 0

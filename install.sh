@@ -5,7 +5,8 @@ source "$ROOT/lib/core.sh"
 source "$ROOT/modules/niri.sh"
 source "$ROOT/modules/cursor.sh"
 source "$ROOT/modules/files.sh"
-usage() { echo 'Usage: install.sh [--dry-run] [--yes] [--feature niri|cursor|files|all] | --detect | --rollback BACKUP_DIRECTORY'; }
+source "$ROOT/modules/ghostty.sh"
+usage() { echo 'Usage: install.sh [--dry-run] [--yes] [--feature niri|cursor|files|ghostty|all] | --detect | --rollback BACKUP_DIRECTORY'; }
 dry_run=0; approved=0; feature=all; action=install; backup_dir=
 while (($#)); do
   case $1 in
@@ -16,12 +17,13 @@ while (($#)); do
     -h|--help) usage; exit 0;; *) usage >&2; exit 2;;
   esac; shift
 done
-case $feature in all|niri|cursor|files) ;; *) echo "Unknown feature: $feature" >&2; exit 2;; esac
+case $feature in all|niri|cursor|files|ghostty) ;; *) echo "Unknown feature: $feature" >&2; exit 2;; esac
 if [[ $action == detect ]]; then detect; exit; fi
 if [[ $action == rollback ]]; then rollback "$backup_dir"; exit; fi
 case $feature in
   niri) niri_apply;;
   cursor) cursor_apply;;
   files) files_apply;;
-  all) niri_apply; cursor_apply; files_apply;;
+  ghostty) ghostty_apply;;
+  all) niri_apply; cursor_apply; files_apply; ghostty_apply;;
 esac
