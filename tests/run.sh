@@ -55,4 +55,15 @@ grep -q 'Mod+S { screenshot; }' "$XDG_CONFIG_HOME/niri/config.kdl"
 printf 'include "dms/binds.kdl"\n' > "$XDG_CONFIG_HOME/niri/config.kdl"
 printf 'binds {\n Super+S { screenshot; }\n}\n' > "$XDG_CONFIG_HOME/niri/dms/binds.kdl"
 if "$root/install.sh" --yes --feature screenshot; then echo 'Expected shortcut conflict rejection' >&2; exit 1; fi
+printf '// existing niri configuration\n' > "$XDG_CONFIG_HOME/niri/config.kdl"
+"$root/install.sh" --dry-run --feature width-startup
+! grep -q 'vylmods: start Niri width memory' "$XDG_CONFIG_HOME/niri/config.kdl"
+"$root/install.sh" --yes --feature width-startup
+grep -q 'spawn-at-startup "python3"' "$XDG_CONFIG_HOME/niri/config.kdl"
+cp "$XDG_CONFIG_HOME/niri/config.kdl" "$tmp/startup-applied"
+"$root/install.sh" --yes --feature width-startup
+cmp "$tmp/startup-applied" "$XDG_CONFIG_HOME/niri/config.kdl"
+startup_backup=$(find "$XDG_STATE_HOME" -maxdepth 1 -type d -name 'niri-width-startup-backup.*' -print -quit)
+"$root/install.sh" --yes --rollback "$startup_backup"
+grep -qx '// existing niri configuration' "$XDG_CONFIG_HOME/niri/config.kdl"
 printf 'Tests passed\n'  

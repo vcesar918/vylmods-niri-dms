@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Experimental Niri width memory; see docs/niri-width.md before use."""
 import json
+import fcntl
 import os
 from pathlib import Path
 import subprocess
@@ -75,6 +76,16 @@ class WidthMemory:
 
 
 def main():
+    runtime_dir = os.environ.get('XDG_RUNTIME_DIR')
+    if not runtime_dir:
+        print('XDG_RUNTIME_DIR is required to prevent duplicate helpers.', file=sys.stderr)
+        return 1
+    try:
+        lock = open(Path(runtime_dir) / 'vylmods-niri-width.lock', 'a')
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (OSError, BlockingIOError) as exc:
+        print(f'Width helper is already running or cannot acquire its lock: {exc}', file=sys.stderr)
+        return 1
     state = Path(os.environ.get('XDG_STATE_HOME', str(Path.home() / '.local/state'))) / 'vylmods-niri-dms' / 'widths.json'
     try:
         saved = json.loads(state.read_text()) if state.exists() else {}
