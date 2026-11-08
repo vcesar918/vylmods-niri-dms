@@ -44,4 +44,15 @@ grep -qx 'window-padding-y = 2,20' "$XDG_CONFIG_HOME/ghostty/config"
 ghostty_backup=$(find "$XDG_STATE_HOME" -maxdepth 1 -type d -name 'ghostty-manager-backup.*' -print -quit)
 "$root/install.sh" --yes --rollback "$ghostty_backup"
 grep -qx 'window-padding-y = 4,8' "$XDG_CONFIG_HOME/ghostty/config"
+printf 'include "dms/binds.kdl"\n' > "$XDG_CONFIG_HOME/niri/config.kdl"
+mkdir -p "$XDG_CONFIG_HOME/niri/dms"
+printf 'binds {\n Mod+T { spawn "ghostty"; }\n}\n' > "$XDG_CONFIG_HOME/niri/dms/binds.kdl"
+"$root/install.sh" --dry-run --feature screenshot
+! grep -q 'vylmods: Super+S' "$XDG_CONFIG_HOME/niri/config.kdl"
+"$root/install.sh" --yes --feature screenshot
+grep -q 'Mod+S { screenshot; }' "$XDG_CONFIG_HOME/niri/config.kdl"
+"$root/install.sh" --yes --feature screenshot
+printf 'include "dms/binds.kdl"\n' > "$XDG_CONFIG_HOME/niri/config.kdl"
+printf 'binds {\n Super+S { screenshot; }\n}\n' > "$XDG_CONFIG_HOME/niri/dms/binds.kdl"
+if "$root/install.sh" --yes --feature screenshot; then echo 'Expected shortcut conflict rejection' >&2; exit 1; fi
 printf 'Tests passed\n'  

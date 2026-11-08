@@ -25,3 +25,7 @@ Dux Files is the upstream DMS-associated file manager (`dfiles`). Run `./install
 ## Ghostty padding
 
 Use `./install.sh --dry-run --feature ghostty`, then `./install.sh --feature ghostty`. The feature requires an existing `~/.config/ghostty/config`, checks the proposed file with `ghostty +validate-config`, and sets top padding to 2 and bottom padding to 20 points. Existing padding is backed up. Configurations with included files or duplicate padding settings require manual review. Open a new window or split to see the change. Restore the backup with the printed rollback command.
+
+## Screenshot shortcut
+
+`./install.sh --dry-run --feature screenshot` checks the Niri configuration and its includes for a Super+S binding, then validates the proposed configuration. `./install.sh --feature screenshot` backs up the configuration and adds Super+S to open Niri's screenshot selection interface. Niri's existing screenshot-path controls where images are saved. The shortcut check is conservative; if the config or includes cannot be inspected, the installer stops for manual review. Use the printed rollback command to restore the backup.
